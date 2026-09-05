@@ -72,6 +72,7 @@ public class Main {
     }
 
     private static void showInventory(Fleet fleet) {
+       System.out.println();
        System.out.println("-- Inventory (5 vehicles, sorted by year then make) --");
        for (Vehicle vehicle : fleet.sortedByYear()) {
            System.out.println(vehicle);
@@ -80,6 +81,7 @@ public class Main {
     }
 
     private static void soundCheck(Fleet fleet) {
+       System.out.println();
        System.out.println("-- Sound check --");
        for (Honkable honkable : fleet.sortedByYear()) {
            honkable.honk();
@@ -95,6 +97,7 @@ public class Main {
     }
 
     private static void printReport(Fleet fleet) {
+       System.out.println();
        System.out.println("-- Fleet report --");
        System.out.printf("%-20s: %d%n", "Vehicles", fleet.size());
        System.out.printf("%-20s: %.1f L%n", "Average engine size", fleet.averageEngineSize());
@@ -113,6 +116,7 @@ public class Main {
     }
 
     private static void guardRails(Fleet fleet) {
+       System.out.println();
        System.out.println("-- Guard rails --");
 
        Vehicle duplicateAccord = fleet.findByVin("1HGCM82633A004352");
