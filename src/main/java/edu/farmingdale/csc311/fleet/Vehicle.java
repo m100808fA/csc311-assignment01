@@ -4,9 +4,19 @@ package edu.farmingdale.csc311.fleet;
  * Base class for everything the motor pool owns. Abstract on purpose:
  * the fleet holds cars and trucks, never a plain "vehicle".
  *
- * @author YOUR NAME HERE
+ *
  */
 public abstract class Vehicle implements Honkable {
+
+    private final String vin;
+    private final String make;
+    private final String model;
+    private int year;
+    private String color;
+    private int wheels;
+    private final double engineSize;
+    private final FuelType fuelType;
+    private double fuelCapacity;
 
     /* ------------------------------------------------------------------
      * TODO-02     commit: TODO-02: add Vehicle fields and constructor
@@ -44,9 +54,57 @@ public abstract class Vehicle implements Honkable {
      * a private static helper and call it three times.
      * ------------------------------------------------------------------ */
 
+    private static String checkRequiredText(String fieldName, String value) {
+       String trimmed = value == null ? null : value.trim();
+       if (trimmed == null || trimmed.isBlank()) {
+           throw new IllegalArgumentException(fieldName + " must not be null or blank, got " + value);
+       }
+       return trimmed;
+    }
+
     protected Vehicle(String vin, String make, String model, int year, String color,
                       int wheels, double engineSize, FuelType fuelType, double fuelCapacity) {
-        throw new UnsupportedOperationException("TODO-02");
+       if (vin == null) {
+           throw new IllegalArgumentException("vin must not be null, got " + vin);
+       }
+       String trimmedVin = vin.trim();
+       if (trimmedVin.length() != 17) {
+           throw new IllegalArgumentException("vin must be 17 characters after trimming, got " + vin);
+       }
+       this.vin = trimmedVin.toUpperCase();
+
+       this.make = checkRequiredText("make", make);
+       this.model = checkRequiredText("model", model);
+       this.color = checkRequiredText("color", color);
+
+       if (year < 1900 || year > 2100) {
+           throw new IllegalArgumentException("year must be between 1900 and 2100, got " + year);
+       }
+       this.year = year;
+
+       if (wheels < 2 || wheels > 18) {
+           throw new IllegalArgumentException("wheels must be between 2 and 18, got " + wheels);
+       }
+       this.wheels = wheels;
+
+       if (fuelType == null) {
+           throw new IllegalArgumentException("fuelType must not be null, got " + fuelType);
+       }
+       this.fuelType = fuelType;
+
+       if (fuelType.hasEngine()) {
+           if (engineSize <= 0.0 || engineSize > 8.5) {
+               throw new IllegalArgumentException("engineSize must be > 0.0 and <= 8.5 for " + fuelType + ", got " + engineSize);
+           }
+       } else if (engineSize != 0.0) {
+           throw new IllegalArgumentException("engineSize must be exactly 0.0 for " + fuelType + ", got " + engineSize);
+       }
+       this.engineSize = engineSize;
+
+       if (fuelCapacity <= 0.0) {
+           throw new IllegalArgumentException("fuelCapacity must be greater than 0.0, got " + fuelCapacity);
+       }
+       this.fuelCapacity = fuelCapacity;
     }
 
     /* ------------------------------------------------------------------
