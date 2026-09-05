@@ -3,7 +3,7 @@ package edu.farmingdale.csc311.fleet;
 /**
  * Driver. This is the only class that prints a report.
  *
- * @author YOUR NAME HERE
+ * @author Faseeh
  */
 public class Main {
 
@@ -53,6 +53,8 @@ public class Main {
 
     public static void main(String[] args) {
        Fleet fleet = buildFleet();
+       System.out.println("=== Farmingdale Motor Pool ===");
+       System.out.println();
        showInventory(fleet);
        soundCheck(fleet);
        printReport(fleet);
@@ -70,24 +72,31 @@ public class Main {
     }
 
     private static void showInventory(Fleet fleet) {
+       System.out.println("-- Inventory (5 vehicles, sorted by year then make) --");
        for (Vehicle vehicle : fleet.sortedByYear()) {
            System.out.println(vehicle);
        }
+       System.out.println();
     }
 
     private static void soundCheck(Fleet fleet) {
+       System.out.println("-- Sound check --");
        for (Honkable honkable : fleet.sortedByYear()) {
            honkable.honk();
        }
+       System.out.println();
 
+       System.out.println("-- Impatient Accord --");
        Vehicle accord = fleet.findByVin("1HGCM82633A004352");
        if (accord != null) {
            accord.honk(3);
        }
+       System.out.println();
     }
 
     private static void printReport(Fleet fleet) {
-       System.out.printf("%-20s: %d%n", "Vehicle count", fleet.size());
+       System.out.println("-- Fleet report --");
+       System.out.printf("%-20s: %d%n", "Vehicles", fleet.size());
        System.out.printf("%-20s: %.1f L%n", "Average engine size", fleet.averageEngineSize());
 
        Vehicle longest = fleet.longestRange();
@@ -96,15 +105,20 @@ public class Main {
                    "Longest range", longest.getYear(), longest.getMake(), longest.getModel(), longest.rangeInMiles());
        }
 
+       System.out.println("Fuel mix:");
        for (FuelType fuelType : FuelType.values()) {
            System.out.printf("  %-9s: %d%n", fuelType.getLabel(), fleet.countWithFuelType(fuelType));
        }
+       System.out.println();
     }
 
     private static void guardRails(Fleet fleet) {
-       System.out.printf("%-23s: %s%n", "Add Accord again", fleet.add(fleet.findByVin("1HGCM82633A004352")));
-       System.out.printf("%-23s: %s%n", "Remove Prius by VIN", fleet.removeByVin("JTDKARFU2J3061234"));
-       System.out.printf("%-23s: %s%n", "Fleet size after remove", fleet.size());
+       System.out.println("-- Guard rails --");
+
+       Vehicle duplicateAccord = fleet.findByVin("1HGCM82633A004352");
+       System.out.printf("%-23s: %s%n", "Duplicate VIN rejected", duplicateAccord == null ? false : !fleet.add(duplicateAccord));
+       System.out.printf("%-23s: %s%n", "Removed the Prius", fleet.removeByVin("JTDKARFU2J3061234"));
+       System.out.printf("%-23s: %s%n", "Fleet size now", fleet.size());
 
        try {
            new Car("5YJ3E1EA7PF123456", "Tesla", "Model 3", 2024, "Red", 4, 2.0, FuelType.ELECTRIC, 75.0, 4);
@@ -119,7 +133,10 @@ public class Main {
        }
 
        try {
-           fleet.findByVin("1HGCM82633A004352").honk(0);
+           Vehicle v = fleet.findByVin("1HGCM82633A004352");
+           if (v != null) {
+               v.honk(0);
+           }
        } catch (IllegalArgumentException e) {
            System.out.println("Caught: " + e.getMessage());
        }
