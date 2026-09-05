@@ -164,18 +164,60 @@ public class Fleet {
      * ------------------------------------------------------------------ */
 
     public Vehicle[] sortedByYear() {
-        throw new UnsupportedOperationException("TODO-09");
+        Vehicle[] sorted = toArray();
+        for (int i = 1; i < sorted.length; i++) {
+            Vehicle current = sorted[i];
+            int j = i - 1;
+            while (j >= 0 && (sorted[j].getYear() > current.getYear()
+                    || (sorted[j].getYear() == current.getYear()
+                    && sorted[j].getMake().compareToIgnoreCase(current.getMake()) > 0))) {
+                sorted[j + 1] = sorted[j];
+                j--;
+            }
+            sorted[j + 1] = current;
+        }
+        return sorted;
     }
 
     public int countWithFuelType(FuelType fuel) {
-        throw new UnsupportedOperationException("TODO-09");
+        if (fuel == null) {
+            return 0;
+        }
+        int count = 0;
+        for (int i = 0; i < this.count; i++) {
+            if (vehicles[i].getFuelType() == fuel) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public double averageEngineSize() {
-        throw new UnsupportedOperationException("TODO-09");
+        double total = 0.0;
+        int engineCount = 0;
+        for (int i = 0; i < count; i++) {
+            if (vehicles[i].getFuelType().hasEngine()) {
+                total += vehicles[i].getEngineSize();
+                engineCount++;
+            }
+        }
+        if (engineCount == 0) {
+            return 0.0;
+        }
+        return total / engineCount;
     }
 
     public Vehicle longestRange() {
-        throw new UnsupportedOperationException("TODO-09");
+        if (count == 0) {
+            return null;
+        }
+
+        Vehicle longest = vehicles[0];
+        for (int i = 1; i < count; i++) {
+            if (vehicles[i].rangeInMiles() > longest.rangeInMiles()) {
+                longest = vehicles[i];
+            }
+        }
+        return longest;
     }
 }
